@@ -20,7 +20,7 @@ I am a first-year PhD student in Electrical and Computer Engineering at North Ca
 <h2>🌍 Visitor Map</h2>
 <div style="max-width:600px;margin:1rem 0;">
   <script id="mapmyvisitors" type="text/javascript" async
-    src="https://mapmyvisitors.com/map.js?cl=ffffff&w=a&t=n&d=xh3uoD9_Q6tWfq08QKOXiiY4IvtOjNPeDolcAN44ATM&co=2d78ad&cmo=3acc3a&cmn=ff5353&ct=ffffff">
+    src="https://mapmyvisitors.com/map.js?cl=ffffff&w=a&t=tt&d=xh3uoD9_Q6tWfq08QKOXiiY4IvtOjNPeDolcAN44ATM&co=24628d&cmo=432d2d&cmn=569056&ct=a6e4aa">
   </script>
   <noscript>
     <a href="https://mapmyvisitors.com" title="Visitor Map">View my visitor map</a>
