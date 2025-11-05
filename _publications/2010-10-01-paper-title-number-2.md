@@ -2,10 +2,10 @@
 title: "Secondary Frequency Control Strategy of Distribution-Level Virtual Power Plant"
 collection: publications
 permalink: /publication/2010-10-01-paper-title-number-2
-excerpt: 'This paper is about the number 2. The number 3 is left for future work.'
+excerpt: ''
 date: 2025-06-25
-venue: 'Conference 1'
-slidesurl: 'http://academicpages.github.io/files/slides2.pdf'
+venue: '7th Asia Energy and Electrical Engineering Symposium'
+slidesurl: ''
 paperurl: 'https://ieeexplore.ieee.org/abstract/document/11018941/authors#authors'
 
 ---
