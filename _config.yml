@@ -21,7 +21,7 @@ repository               : zilinzhuang/zilinzhuang.github.io
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "images/IMG_6756.jpg"
+  avatar           : "/IMG_6756.jpg"
   name             : "Zilin Zhuang（庄紫麟）"
   bio              : "none"
   employer         : "North Carolina state University"
