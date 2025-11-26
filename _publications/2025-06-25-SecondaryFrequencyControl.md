@@ -1,7 +1,7 @@
 ---
 title: "Secondary Frequency Control Strategy of Distribution-Level Virtual Power Plant"
 collection: publications
-permalink: /publication/2025-06-25-Secondary Frequency Control
+permalink: /publication/2025-06-25-SecondaryFrequencyControl
 excerpt: ''
 date: 2025-06-25
 venue: '7th Asia Energy and Electrical Engineering Symposium'
