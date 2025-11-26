@@ -1,7 +1,7 @@
 ---
 title: 'Two interesting questions of Bang-Bang Control'
 date: 2025-11-25
-permalink: /posts/controltheroy_bangbang/
+permalink: /posts/2025/11/blog-post-5/
 tags:
   - control-theory
   - bang-bang control
