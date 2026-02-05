@@ -26,8 +26,8 @@ Some of my all-time favorite books include:
 ### Travel
 
 <figure class="half">
-  <img src="{{ '/images/IMG_5209.HEIC' | relative_url }}" alt="Mt. Siguniang, Sichuan, China">
-  <img src="{{ '/images/IMG_7352.HEIC' | relative_url }}" alt="Charles River, Boston, USA">
+  <img src="{{ '/images/IMG_5209.JPG' | relative_url }}" alt="Mt. Siguniang, Sichuan, China">
+  <img src="{{ '/images/IMG_7352.JPG' | relative_url }}" alt="Charles River, Boston, USA">
 </figure>
 
 {% for post in site.portfolio %}
