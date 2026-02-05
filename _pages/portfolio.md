@@ -25,7 +25,7 @@ Some of my all-time favorite books include:
 
 ### Travel
 
-盖将自其变者而观之，则天地曾不能以一瞬，自其不变者而观之，则物与我皆无尽也，而又何羡乎？——苏轼
+盖将自其变者而观之，则天地曾不能以一瞬；自其不变者而观之，则物与我皆无尽也，而又何羡乎！——苏轼
 
 <figure class="half">
   <figure>
