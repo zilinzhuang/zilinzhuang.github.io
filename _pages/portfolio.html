@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "ZZL"
+title: "Personal"
 permalink: /portfolio/
 author_profile: true
 ---
@@ -10,6 +10,7 @@ author_profile: true
 Hi, I'm ZZL. I grew up in Jiangsu, China, and I’m the kind of person who keeps collecting hobbies.  
 Feel free to connect with me on <a href="https://www.instagram.com/zilinpurple?igsh=MWZia284aDF3Y3Zqcw%3D%3D&utm_source=qr" target="_blank" rel="noopener">Instagram</a>.
 
+{% capture intro %}
 ### Sports
 I’m genuinely passionate about sports — basketball, table tennis, badminton, Go, hiking… you name it. I also love trying new activities whenever I get the chance.
 
@@ -32,6 +33,11 @@ I love traveling too — collecting new places, new food, and tiny moments worth
   <img src="{{ '/assets/images/travel-2.jpg' | relative_url }}" alt="Travel photo 2">
 </figure>
 
+
+{% endcapture %}
+{{ intro | markdownify }}
+
 {% for post in site.portfolio %}
   {% include archive-single.html %}
 {% endfor %}
+
