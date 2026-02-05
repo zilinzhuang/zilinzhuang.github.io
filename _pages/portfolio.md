@@ -26,8 +26,8 @@ Some of my all-time favorite books include:
 ### Travel
 
 <figure class="half">
-  <img src="{{ '/assets/images/IMG_5209.jpg' | relative_url }}" alt="Travel photo 1">
-  <img src="{{ '/assets/images/IMG_7352.jpg' | relative_url }}" alt="Travel photo 2">
+  <img src="{{ '/assets/images/IMG_5209.JPG' | relative_url }}" alt="Travel photo 1">
+  <img src="{{ '/assets/images/IMG_7352.JPG' | relative_url }}" alt="Travel photo 2">
 </figure>
 
 {% for post in site.portfolio %}
