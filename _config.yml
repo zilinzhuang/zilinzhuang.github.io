@@ -329,6 +329,6 @@ tag_archive:
 
 # HTML Compression
 compress_html:
-  # clippings: all  
+  clippings: all  
   ignore:
     envs: development
