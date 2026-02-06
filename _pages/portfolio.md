@@ -7,7 +7,7 @@ author_profile: true
 
 {% include base_path %}
 
-Hi, I'm ZZL. I grew up in Jiangsu, China, and I’m the kind of person who keeps collecting hobbies. 
+Hi, I'm ZZL. I grew up in Jiangsu, China, and I’m someone with many hobbies.
 Feel free to connect with me on <a href="https://www.instagram.com/zilinpurple?igsh=MWZia284aDF3Y3Zqcw%3D%3D&utm_source=qr" target="_blank" rel="noopener">Instagram</a>.
 
 ### Sports
