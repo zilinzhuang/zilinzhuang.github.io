@@ -17,7 +17,7 @@ I’m genuinely passionate about sports — basketball, table tennis, badminton,
 Music is another big part of my life. I play guitar and drums, do arranging/production, and I also run a small personal music podcast.
 
 I’m also a huge fan of literature, movies/TV, video games and chinese calligraphy.  
-Some of my all-time favorite books include:
+Some of my favorite books include:
 - *The King of Chess* — Acheng  
 - *Siddhartha* — Hermann Hesse  
 - *1Q84* — Haruki Murakami  
