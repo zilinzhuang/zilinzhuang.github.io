@@ -23,9 +23,42 @@ Some of my favorite books include:
 - *1Q84* — Haruki Murakami  
 - *The Myth of Sisyphus* — Albert Camus  
 
-### Travel
+
+<style>
+  .travel-album{
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0 1rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .travel-item{
+    flex: 0 0 auto;
+    width: clamp(220px, 55vw, 320px);  /* 控制照片显示不要太大 */
+    margin: 0;
+    scroll-snap-align: start;
+  }
+
+  .travel-item img{
+    width: 100%;
+    height: 210px;         /* 统一高度，避免忽大忽小 */
+    object-fit: cover;     /* 裁切填满 */
+    border-radius: 10px;   /* 可删 */
+    display: block;
+  }
+
+  .travel-item figcaption{
+    font-size: 0.85em;
+    opacity: 0.75;
+    margin-top: 0.35rem;
+  }
+</style>
+
 
 ### Travel
+
 
 <div class="travel-album" aria-label="Travel photo album">
   <figure class="travel-item">
