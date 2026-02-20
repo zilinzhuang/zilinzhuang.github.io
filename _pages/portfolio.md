@@ -24,68 +24,66 @@ Some of my favorite books include:
 - *The Myth of Sisyphus* — Albert Camus  
 
 
+### Travel
+
 <style>
-  .travel-album{
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    padding: 0.5rem 0 1rem;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+  /* 滚动相册的外部容器 */
+  .scroll-album {
+    display: flex;           /* 让内部的图片横向排列 */
+    overflow-x: auto;        /* 内容超出时允许横向滚动 */
+    gap: 16px;               /* 照片之间的间距 */
+    padding-bottom: 15px;    /* 底部留白，防止滚动条挡住文字 */
+    scroll-snap-type: x mandatory; /* 增加滚动时的吸附手感（可选） */
   }
 
-  .travel-item{
-    flex: 0 0 auto;
-    width: clamp(220px, 55vw, 320px);  /* 控制照片显示不要太大 */
+  /* 每一张照片和描述的容器 */
+  .scroll-album figure {
+    flex: 0 0 auto;          /* 防止照片被自动挤压变窄 */
     margin: 0;
+    width: 240px;            /* 【修改这里】：控制每张照片的宽度 */
     scroll-snap-align: start;
   }
 
-  .travel-item img{
+  /* 照片本身的样式 */
+  .scroll-album img {
     width: 100%;
-    height: 210px;         /* 统一高度，避免忽大忽小 */
-    object-fit: cover;     /* 裁切填满 */
-    border-radius: 10px;   /* 可删 */
-    display: block;
+    height: 180px;           /* 【修改这里】：控制照片的统一高度 */
+    object-fit: cover;       /* 确保照片被裁剪以填充框距，且不会变形 */
+    border-radius: 8px;      /* 增加一点圆角让照片看起来更精致（不需要可删除） */
   }
 
-  .travel-item figcaption{
+  /* 照片下方的文字描述 */
+  .scroll-album figcaption {
     font-size: 0.85em;
     opacity: 0.75;
-    margin-top: 0.35rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    line-height: 1.3;
+    white-space: normal;     /* 允许文字多行显示 */
+  }
+
+  /* 优化滚动条的外观（仅在支持 Webkit 的浏览器生效） */
+  .scroll-album::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scroll-album::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 4px;
   }
 </style>
 
-
-### Travel
-
-
-<div class="travel-album" aria-label="Travel photo album">
-  <figure class="travel-item">
-    <img
-      src="{{ '/images/IMG_5209.JPG' | relative_url }}"
-      alt="Mt. Siguniang, Sichuan, China"
-      loading="lazy"
-      decoding="async"
-    >
-    <figcaption>
-      Mt. Siguniang, Sichuan, China
-    </figcaption>
+<div class="scroll-album">
+  <figure>
+    <img src="{{ '/images/IMG_5209.JPG' | relative_url }}" alt="Mt. Siguniang, Sichuan, China">
+    <figcaption>Mt. Siguniang, Sichuan, China</figcaption>
   </figure>
 
-  <figure class="travel-item">
-    <img
-      src="{{ '/images/IMG_7352.JPG' | relative_url }}"
-      alt="Charles River, Boston, USA"
-      loading="lazy"
-      decoding="async"
-    >
-    <figcaption>
-      Charles River, Boston, MA, USA
-    </figcaption>
+  <figure>
+    <img src="{{ '/images/IMG_7352.JPG' | relative_url }}" alt="Charles River, Boston, USA">
+    <figcaption>Charles River, Boston, MA, USA</figcaption>
   </figure>
 
-</div>
+  </div>
 
 {% for post in site.portfolio %}
   {% include archive-single.html %}
