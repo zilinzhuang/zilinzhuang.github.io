@@ -1,0 +1,14 @@
+---
+title: 'Two interesting questions of Bang-Bang Control'
+date: 2025-11-25
+permalink: /posts/2025/11/blog-post-5/
+tags:
+  - control-theory
+  - bang-bang control
+  - optimal control
+---
+
+Two interesting questions of bang-bang control: Minimum-fuel problem & Minimum-time problem.
+
+Here's my notes: 
+[📄 Download PDF notes]({{ '/files/bangbang_notes.pdf' | relative_url }})
