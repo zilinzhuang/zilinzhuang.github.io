@@ -1,0 +1,550 @@
+---
+title: 'What Changes When PI Control Is Added to the Excitation System?'
+date: 2026-04-23
+permalink: /posts/2026/04/smib-avr-pi-excitation/
+mathjax: true
+tags:
+  - control-theory
+  - power-systems
+  - excitation-system
+  - AVR
+  - PI-control
+  - small-signal-stability
+---
+
+<style>
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+.math-inline {
+  white-space: nowrap;
+}
+
+.math-inline em {
+  font-style: italic;
+}
+
+.math-inline sub,
+.math-inline sup {
+  line-height: 0;
+}
+</style>
+
+I recently took a course on "Power System Stability and Control," and an interesting question suddenly struck me. This post studies this simple but important question in a single-machine infinite-bus system:
+
+> What changes when the excitation system is changed from proportional voltage feedback to PI voltage feedback?
+
+The main conclusion is that integral action removes the terminal-voltage steady-state error. In the simulation below, the proportional AVR gives a stable equilibrium with terminal voltage about 0.8097, while the PI AVR moves the terminal voltage exactly to the reference value 0.9. The cost is that the PI controller introduces an additional slow pole. In this example, that slow pole mainly affects the excitation and voltage-related states, such as the integral state, excitation voltage, internal voltage, and terminal voltage. It is not primarily a frequency oscillation mode, although the frequency state can still be weakly affected through coupling.
+
+The analysis compares two cases:
+
+1. AVR with proportional voltage feedback only.
+2. AVR with PI voltage feedback.
+
+The comparison is based on nonlinear equilibrium calculation, small-signal linearization, eigenvalue analysis, and the transfer function from the excitation input <span class="math-inline"><em>u</em></span> to the rotor speed deviation <span class="math-inline"><em>ω</em></span>.
+
+## Code and simulation files
+
+The SMIB model and MATLAB simulation scripts used in this post are available in my GitHub repository:
+
+[powersystem_stability-ctrl](https://github.com/zilinzhuang/powersystem_stability-ctrl)
+
+Readers are welcome to download the files, run the simulations, and modify the AVR/PI controller parameters to reproduce or further explore the results discussed below.
+
+```bash
+git clone https://github.com/zilinzhuang/powersystem_stability-ctrl.git
+```
+
+---
+
+## 1. SMIB Model Setup
+
+Before adding integral action, define the state vector as follows:
+
+$$
+x = \begin{bmatrix} E_{fd} & e & \delta & \omega \end{bmatrix}^{T}.
+$$
+
+Here, <span class="math-inline"><em>E</em><sub>fd</sub></span> is the excitation voltage state, <span class="math-inline"><em>e</em></span> is the internal transient voltage magnitude, <span class="math-inline"><em>δ</em></span> is the rotor angle, and <span class="math-inline"><em>ω</em></span> is the rotor speed deviation.
+
+The terminal voltage magnitude is computed from
+
+$$
+V = \sqrt{\alpha^{2} e^{2} + 2\alpha\beta e \cos\delta + \beta^{2}}.
+$$
+
+The network constants are
+
+$$
+\alpha = \frac{x_L}{x+x_L}, \qquad
+\beta = \frac{x}{x+x_L}.
+$$
+
+The network angle is
+
+$$
+\theta = \tan^{-1}\!\left(\frac{\alpha e \sin\delta}{\alpha e \cos\delta + \beta}\right).
+$$
+
+In numerical implementation, it is usually better to compute this angle with `atan2` rather than `atan`, because `atan2` handles the quadrant correctly. The expression above is the mathematical form used in the simulation.
+
+The machine and excitation dynamics are
+
+$$
+\dot{E}_{fd}
+= \frac{1}{T'_{d0}}\left[-K_1E_{fd} - K_2(V - V^{*}) + u\right],
+$$
+
+$$
+\dot{e}
+= \frac{1}{T_d}\left[-ae + bV\cos(\delta-\theta) + E_{fd}\right],
+$$
+
+$$
+\dot{\delta} = \omega,
+$$
+
+$$
+\dot{\omega}
+= \frac{1}{M}\left[P_m - d\omega - \frac{eV\sin(\delta-\theta)}{x}\right].
+$$
+
+The constants in the transient-voltage equation are
+
+$$
+a = \frac{x_d}{x'_d}, \qquad
+b = \frac{x_d-x'_d}{x'_d}.
+$$
+
+The parameter values used in the simulation are
+
+$$
+\begin{aligned}
+T'_{d0} &= 0.1, & T_d &= 0.05, & K_1 &= 1.5, & K_2 &= 6, \\
+M &= 0.2, & d &= 0.28, & P_m &= 0.1, & V^{*} &= 0.9.
+\end{aligned}
+$$
+
+---
+
+## 2. Excitation System Without PI Control
+
+Without integral action, the excitation equation is
+
+$$
+\dot{E}_{fd}
+= \frac{1}{T'_{d0}}\left[-K_1E_{fd} - K_2(V - V^{*}) + u\right].
+$$
+
+For the equilibrium calculation in this post, take <span class="math-inline"><em>u</em> = 0</span>. At equilibrium, <span class="math-inline">d<em>E</em><sub>fd</sub>/dt = 0</span>. Therefore,
+
+$$
+0 = -K_1E_{fd} - K_2(V - V^{*}).
+$$
+
+Solving this equation gives
+
+$$
+K_1E_{fd} = -K_2(V - V^{*}),
+$$
+
+or equivalently,
+
+$$
+E_{fd}
+= -\frac{K_2}{K_1}(V - V^{*})
+= \frac{K_2}{K_1}(V^{*} - V).
+$$
+
+This is the key point. The proportional AVR does not impose <span class="math-inline"><em>V</em> = <em>V</em><sup>*</sup></span>. Instead, the excitation voltage <span class="math-inline"><em>E</em><sub>fd</sub></span> balances the proportional voltage error. Therefore, a proportional AVR can stabilize the voltage, but it generally leaves a nonzero steady-state voltage error.
+
+The computed equilibrium is
+
+$$
+x_{e,\mathrm{no\ PI}}
+= \begin{bmatrix}
+0.361147998565988 \\
+0.678486721654244 \\
+0.648869391580794 \\
+0
+\end{bmatrix},
+\qquad
+V_{e,\mathrm{no\ PI}} = 0.809713000359.
+$$
+
+Because <span class="math-inline"><em>V</em><sub>e,no&nbsp;PI</sub></span> is not equal to <span class="math-inline"><em>V</em><sup>*</sup></span>, the proportional controller has a steady-state voltage error:
+
+$$
+V^{*} - V_{e,\mathrm{no\ PI}}
+= 0.9 - 0.809713000359
+\approx 0.090287.
+$$
+
+---
+
+## 3. Excitation System With PI Control
+
+After adding integral action, introduce a new integral state <span class="math-inline"><em>W</em><sub>1</sub></span>:
+
+$$
+\dot{W}_1 = V - V^{*}.
+$$
+
+The state vector becomes
+
+$$
+x_{\mathrm{PI}}
+= \begin{bmatrix} E_{fd} & e & \delta & \omega & W_1 \end{bmatrix}^{T}.
+$$
+
+The excitation equation becomes
+
+$$
+\dot{E}_{fd}
+= \frac{1}{T'_{d0}}\left[-K_1E_{fd} - K_2(V - V^{*}) - K_3W_1 + u\right].
+$$
+
+In the simulation, <span class="math-inline"><em>K</em><sub>3</sub> = 0.5</span>. At equilibrium, the integral equation gives
+
+$$
+\dot{W}_1 = 0.
+$$
+
+Since <span class="math-inline">d<em>W</em><sub>1</sub>/dt = <em>V</em> − <em>V</em><sup>*</sup></span>, the equilibrium must satisfy
+
+$$
+V_e = V^{*}.
+$$
+
+This is the most important difference between P control and PI control. The additional state <span class="math-inline"><em>W</em><sub>1</sub></span> forces the steady-state voltage error to zero.
+
+The computed equilibrium is
+
+$$
+x_{e,\mathrm{PI}}
+= \begin{bmatrix}
+0.770015681067331 \\
+0.846375002432449 \\
+0.5056987424032 \\
+0 \\
+-2.31004704320199
+\end{bmatrix},
+\qquad
+V_{e,\mathrm{PI}} = 0.900000000000.
+$$
+
+Thus the PI controller changes the equilibrium significantly. Compared with the proportional AVR, the PI AVR requires a larger excitation voltage <span class="math-inline"><em>E</em><sub>fd</sub></span>, a larger internal voltage <span class="math-inline"><em>e</em></span>, and a smaller rotor angle <span class="math-inline"><em>δ</em></span>. The terminal voltage is restored exactly to <span class="math-inline"><em>V</em><sup>*</sup> = 0.9</span>.
+
+---
+
+## 4. Small-Signal Linearization
+
+Let the nonlinear system be written as
+
+$$
+\dot{x} = f(x,u).
+$$
+
+Linearizing around the equilibrium <span class="math-inline">(<em>x</em><sub>e</sub>, <em>u</em><sub>e</sub>)</span> gives
+
+$$
+\Delta\dot{x} = A\Delta x + B\Delta u,
+$$
+
+where
+
+$$
+A = \left.\frac{\partial f}{\partial x}\right|_{(x_e,u_e)},
+\qquad
+B = \left.\frac{\partial f}{\partial u}\right|_{(x_e,u_e)}.
+$$
+
+The terminal-voltage output is linearized as
+
+$$
+\Delta V = C_V\Delta x + D_V\Delta u,
+$$
+
+where <span class="math-inline"><em>C</em><sub>V</sub></span> is the gradient of <span class="math-inline"><em>V</em></span> with respect to the states, evaluated at the equilibrium.
+
+The frequency output is simply the fourth state:
+
+$$
+C_{\omega,\mathrm{no\ PI}} = \begin{bmatrix}0 & 0 & 0 & 1\end{bmatrix},
+\qquad
+C_{\omega,\mathrm{PI}} = \begin{bmatrix}0 & 0 & 0 & 1 & 0\end{bmatrix}.
+$$
+
+---
+
+## 5. Linearized Model Without PI
+
+The linearized matrices for the proportional AVR are
+
+$$
+A_{\mathrm{no\ PI}} =
+\begin{bmatrix}
+-14.9999999993211 & -25.4781057551501 & 7.55461894375031 & 0 \\
+19.9999999994649 & -73.6585365856968 & -32.4251002936649 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & -0.736934097599062 & -0.659263636008933 & -1.40000000002638
+\end{bmatrix},
+$$
+
+$$
+B_{\mathrm{no\ PI}} =
+\begin{bmatrix}
+10 \\
+0 \\
+0 \\
+0
+\end{bmatrix},
+\qquad
+C_{V,\mathrm{no\ PI}}
+= \begin{bmatrix}0 & 0.424635095919168 & -0.125910315729172 & 0\end{bmatrix},
+$$
+
+$$
+C_{\omega,\mathrm{no\ PI}}
+= \begin{bmatrix}0 & 0 & 0 & 1\end{bmatrix}.
+$$
+
+The eigenvalues are
+
+$$
+\lambda(A_{\mathrm{no\ PI}})
+= \left\{-63.0461,\ -25.6195,\ -0.6965+j0.1446,\ -0.6965-j0.1446\right\}.
+$$
+
+The first two real poles are fast electrical or excitation-related modes. The complex pair is the dominant electromechanical mode in this operating condition.
+
+For the complex pair
+
+$$
+\lambda = -0.6965 \pm j0.1446,
+$$
+
+its natural frequency and damping ratio are approximately
+
+$$
+\omega_n = \sqrt{0.6965^2 + 0.1446^2} \approx 0.7113,
+\qquad
+\zeta = \frac{0.6965}{0.7113} \approx 0.979.
+$$
+
+The transfer function from <span class="math-inline"><em>u</em></span> to <span class="math-inline"><em>ω</em></span> is
+
+$$
+G_{u\to\omega,\mathrm{no\ PI}}(s)
+= \frac{-147.39s}{(s+63.05)(s+25.62)(s^2+1.393s+0.506)}.
+$$
+
+The numerator contains a zero at <span class="math-inline"><em>s</em> = 0</span>, so a constant change in the excitation input does not create a nonzero steady-state frequency deviation. This is consistent with the fact that the steady-state rotor speed deviation should return to zero in a stable synchronous operating point.
+
+---
+
+## 6. Linearized Model With PI
+
+The linearized matrices for the PI AVR are
+
+$$
+A_{\mathrm{PI}} =
+\begin{bmatrix}
+-14.9999999998762 & -26.6199845000425 & 6.79674796777441 & 0 & -5.00000000069889 \\
+20.0000000005751 & -73.6585365856968 & -25.9932062451895 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 \\
+0 & -0.590754687494754 & -0.9029749930764 & -1.40000000002638 & 0 \\
+0 & 0.443666408334042 & -0.11327913279624 & 0 & 0
+\end{bmatrix},
+$$
+
+$$
+B_{\mathrm{PI}} =
+\begin{bmatrix}
+10 \\
+0 \\
+0 \\
+0 \\
+0
+\end{bmatrix},
+\qquad
+C_{V,\mathrm{PI}}
+= \begin{bmatrix}0 & 0.443666408334042 & -0.11327913279624 & 0 & 0\end{bmatrix},
+$$
+
+$$
+C_{\omega,\mathrm{PI}}
+= \begin{bmatrix}0 & 0 & 0 & 1 & 0\end{bmatrix}.
+$$
+
+The eigenvalues are
+
+$$
+\lambda(A_{\mathrm{PI}})
+= \left\{-62.4484,\ -26.1878,\ -0.6933+j0.5644,\ -0.6933-j0.5644,\ -0.03578\right\}.
+$$
+
+The most important new feature is the additional real pole
+
+$$
+\lambda_{\mathrm{slow}} = -0.03578.
+$$
+
+Its approximate time constant is
+
+$$
+\tau_{\mathrm{slow}} \approx \frac{1}{0.03578} \approx 27.95\ \mathrm{s}.
+$$
+
+This time constant is much larger than those associated with the two fast electrical modes. Therefore, the PI controller introduces a slow tail in the response.
+
+For the complex pair with PI control,
+
+$$
+\lambda = -0.6933 \pm j0.5644,
+$$
+
+we get
+
+$$
+\omega_n = \sqrt{0.6933^2 + 0.5644^2} \approx 0.8940,
+\qquad
+\zeta = \frac{0.6933}{0.8940} \approx 0.775.
+$$
+
+Thus the electromechanical pair has a higher oscillation frequency and a lower damping ratio after adding PI control in this parameter setting. However, this does not mean the added slow pole is a frequency oscillation mode. The slow pole is real and is mainly associated with the integral-voltage regulation channel.
+
+The transfer function from <span class="math-inline"><em>u</em></span> to <span class="math-inline"><em>ω</em></span> is
+
+$$
+G_{u\to\omega,\mathrm{PI}}(s)
+= \frac{-118.15s^2}{(s+62.45)(s+26.19)(s+0.03578)(s^2+1.387s+0.7991)}.
+$$
+
+The PI case has one more pole because the integral state <span class="math-inline"><em>W</em><sub>1</sub></span> adds one more system state.
+
+---
+
+## 7. Why PI Removes Voltage Steady-State Error
+
+The reason is very direct. With PI control,
+
+$$
+\dot{W}_1 = V - V^{*}.
+$$
+
+At equilibrium, every state derivative must be zero. Hence,
+
+$$
+0 = \dot{W}_1 = V_e - V^{*}.
+$$
+
+Therefore,
+
+$$
+V_e = V^{*}.
+$$
+
+This result does not depend on the detailed values of <span class="math-inline"><em>K</em><sub>1</sub></span>, <span class="math-inline"><em>K</em><sub>2</sub></span>, or <span class="math-inline"><em>K</em><sub>3</sub></span>, as long as a stable equilibrium exists and the integral state is not saturated.
+
+Without PI control, the excitation equation only gives
+
+$$
+E_{fd,e} = \frac{K_2}{K_1}(V^{*} - V_e).
+$$
+
+This relation allows <span class="math-inline"><em>V</em><sub>e</sub> ≠ <em>V</em><sup>*</sup></span>. The proportional controller can only make the voltage error small by increasing the proportional gain. It cannot force the error to zero unless special conditions happen to hold.
+
+---
+
+## 8. Which Quantity Becomes Slow After Adding PI?
+
+The additional slow pole is associated primarily with the integral-voltage regulation loop.
+
+The signal chain is
+
+$$
+V - V^{*} \longrightarrow W_1 \longrightarrow E_{fd} \longrightarrow e \longrightarrow V.
+$$
+
+Therefore, the slow tail should be most visible in the following variables:
+
+1. <span class="math-inline"><em>W</em><sub>1</sub></span>, the integral state.
+2. <span class="math-inline"><em>E</em><sub>fd</sub></span>, the excitation voltage state.
+3. <span class="math-inline"><em>e</em></span>, the internal transient voltage magnitude.
+4. <span class="math-inline"><em>V</em></span>, the terminal voltage magnitude.
+
+The rotor speed deviation <span class="math-inline"><em>ω</em></span> can still contain a small component of this slow mode because the full nonlinear system is coupled. However, the main oscillatory behavior of <span class="math-inline"><em>ω</em></span> is still governed by the electromechanical complex pair, not by the new real slow pole.
+
+In this example, the extra pole is
+
+$$
+-0.03578,
+$$
+
+while the electromechanical pair is approximately
+
+$$
+-0.6933 \pm j0.5644.
+$$
+
+The real part of the electromechanical pair is much more negative than the slow pole. Hence, the oscillatory part decays much faster than the slow integral-voltage correction.
+
+---
+
+## 9. Root Locus Interpretation for <span class="math-inline"><em>u</em> → <em>ω</em></span>
+
+For the root-locus study, the input is the excitation-side input <span class="math-inline"><em>u</em></span>, and the output is the frequency state <span class="math-inline"><em>ω</em></span>. Therefore, the SISO systems are
+
+$$
+G_{u\to\omega,\mathrm{no\ PI}}(s)
+= C_{\omega,\mathrm{no\ PI}}(sI-A_{\mathrm{no\ PI}})^{-1}B_{\mathrm{no\ PI}},
+$$
+
+and
+
+$$
+G_{u\to\omega,\mathrm{PI}}(s)
+= C_{\omega,\mathrm{PI}}(sI-A_{\mathrm{PI}})^{-1}B_{\mathrm{PI}}.
+$$
+
+The no-PI model is fourth order, while the PI model is fifth order. Therefore, the PI root locus has one additional open-loop pole. That additional pole appears near the origin at <span class="math-inline">−0.03578</span>, which reflects the slow integral mode.
+
+This is why, after adding PI control, the root locus is not just a small perturbation of the original one. The order of the system changes, and the new pole changes the low-frequency behavior of the excitation-to-frequency transfer function.
+
+---
+
+## 10. Summary
+
+Adding PI control to the excitation system changes the SMIB model in three main ways.
+
+First, it adds one new state:
+
+$$
+\dot{W}_1 = V - V^{*}.
+$$
+
+Second, it changes the equilibrium constraint. Without PI, the proportional AVR allows a nonzero voltage error:
+
+$$
+V_{e,\mathrm{no\ PI}} = 0.809713 \neq 0.9.
+$$
+
+With PI, the integral equation enforces
+
+$$
+V_{e,\mathrm{PI}} = V^{*} = 0.9.
+$$
+
+Third, it introduces an additional slow pole:
+
+$$
+\lambda_{\mathrm{slow}} = -0.03578.
+$$
+
+This slow pole mainly affects the voltage-regulation channel, especially <span class="math-inline"><em>W</em><sub>1</sub></span>, <span class="math-inline"><em>E</em><sub>fd</sub></span>, <span class="math-inline"><em>e</em></span>, and <span class="math-inline"><em>V</em></span>. It is not mainly a frequency oscillation mode. The rotor speed <span class="math-inline"><em>ω</em></span> is still mainly shaped by the electromechanical complex pair, although weak coupling means that <span class="math-inline"><em>ω</em></span> may also contain a small slow component.
+
+In short, PI control improves steady-state voltage tracking, but it adds a slow integral mode. This is the classical tradeoff: better steady-state accuracy at the cost of slower low-frequency transient behavior.
