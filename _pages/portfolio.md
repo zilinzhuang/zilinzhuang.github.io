@@ -14,7 +14,7 @@ Feel free to connect with me on <a href="https://www.instagram.com/zilinpurple?i
 I’m genuinely passionate about sports — basketball, table tennis, badminton, Go, hiking… you name it. I also love trying new activities whenever I get the chance.
 
 ### Art
-Music is another big part of my life. I play guitar and drums, do arranging/production, and I also run a small personal music podcast.
+Music is another big part of my life. I play guitar and drums, do arranging, and I also run a small personal music podcast.
 
 I’m also a huge fan of literature, movies/TV, video games and chinese calligraphy.  
 Some of my favorite books include:
