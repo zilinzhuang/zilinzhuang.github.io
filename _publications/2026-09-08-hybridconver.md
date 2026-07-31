@@ -4,7 +4,7 @@ collection: publications
 permalink: /publication/2026-09-08-hybridconverter
 excerpt: ''
 date: 2025-09-08
-venue: '7th Asia Energy and Electrical Engineering Symposium'
+venue: 'PowerUp conference'
 paperurl: 'PowerUp 2026 conference'
 
 ---
