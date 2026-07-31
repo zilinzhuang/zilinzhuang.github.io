@@ -9,4 +9,4 @@ publication_type: conference
 paperurl: ''
 ---
 
-This paper provides a systematic taxonomy of hybrid GFL–GFM control strategies and delivers the first open-source ANDES implementation and benchmark validation of one type of model.
+This paper provides a systematic taxonomy of hybrid GFL-GFM control strategies and delivers the first open-source ANDES implementation and benchmark validation of one type of model.
