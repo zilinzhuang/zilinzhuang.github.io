@@ -4,8 +4,8 @@ collection: publications
 permalink: /publication/2026-09-08-hybridconverter
 excerpt: ''
 date: 2026-09-08
-venue: 'PowerUp conference'
-paperurl: 'PowerUp 2026 conference'
+venue: 'PowerUp 2026 conference'
+paperurl: ''
 
 ---
 
