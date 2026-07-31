@@ -3,7 +3,7 @@ title: "Hybrid GFL-GFM Control for Converter-Dominated Power Systems:  A Systema
 collection: publications
 permalink: /publication/2026-09-08-hybridconverter
 excerpt: ''
-date: 2025-09-08
+date: 2026-09-08
 venue: 'PowerUp conference'
 paperurl: 'PowerUp 2026 conference'
 
