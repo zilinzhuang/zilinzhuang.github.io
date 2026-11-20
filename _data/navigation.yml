@@ -13,7 +13,8 @@ main:
     url: /year-archive/
     
   - title: "CV"
-    url: /cv/
+    url: /files/ZilinZhuang_CV.pdf
+    new_tab: true
     
  # - title: "Guide"
  #   url: /markdown/
