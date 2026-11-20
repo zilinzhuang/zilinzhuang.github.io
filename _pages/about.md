@@ -17,6 +17,10 @@ I am a first-year PhD student in Electrical and Computer Engineering at North Ca
 
 
 
+## Projects
+
+[ANDES Usage Atlas](/andes-usage/) maps research groups whose papers document how they used the ANDES power system simulator.
+
 <h2>🌍 Visitor Map</h2>
 <div style="max-width:600px;margin:1rem 0;">
   <script id="mapmyvisitors" type="text/javascript" async
